@@ -13,20 +13,21 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import Server.ChatUtil;
 import chatFrame.chatFrame;
 
 public class createTextPanel1 extends JFrame {
 	
 	private JPanel panel1,panel2,panel3,panel4,panel5;
-	private JLabel userTab,passTab,show;//��ǩ
+	private JLabel userTab,passTab,show;
 	private JTextField userText;
 	private JPasswordField passField;
 	private JButton loginButton,regButton;
 	public String userName;
 	public String userPwd;
-	JFrame obj;
+	public loginFrame obj;
 	
-	public createTextPanel1(JFrame reg) {
+	public createTextPanel1(loginFrame reg) {
 		this.obj = reg;
 	}
 
@@ -66,20 +67,10 @@ public class createTextPanel1 extends JFrame {
 						
 						System.out.println("用户名:"+userName);
 						System.out.println("密码:"+userPwd);
-						
-						/*boolean lc = new loginCheck(userName,userPwd).loginCheck();
-						if(lc) {*/
-							chatFrame chat = new chatFrame(userName);
-							chat.getSocket(); 
-							obj.dispose();
-						
-							
-						//}
-						//else show.setText("登录失败");
-						
+						loginFrame.Msg.send(ChatUtil.LOGIN_CHECK+"#["+userName+"]["+userPwd+"]");
+						loginFrame.Msg.ReciveLoginName(obj,userName);
 				}
-			}
-					);
+			});
 			regButton = new JButton("注册");
 			regButton.addActionListener(new ActionListener() {
 				

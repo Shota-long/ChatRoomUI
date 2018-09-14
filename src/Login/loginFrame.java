@@ -42,10 +42,7 @@ public class loginFrame extends JFrame{
 	}
 	
 	public void layoutComponents() {
-		
-		JFrame reg = new JFrame();
-		reg = this;
-		createTextPanel1 Panel1 = new createTextPanel1(reg);
+		createTextPanel1 Panel1 = new createTextPanel1(this);
 		createTextPanel2 Panel2 = new createTextPanel2();
 		
 		int i = 0;
@@ -69,8 +66,9 @@ public class loginFrame extends JFrame{
 	}	
 	
 	public static void main(String[] args) {
-		
 		new loginFrame();
+		Msg= new AppenToTextArea(ChatUtil.ADDRESS, ChatUtil.PORT);
+		Msg.read();
 	}
 
 }

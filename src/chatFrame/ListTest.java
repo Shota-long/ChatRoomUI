@@ -1,23 +1,17 @@
 package chatFrame;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class ListTest {
-    List user_list = new ArrayList();
-    private ListTest(){
-        user_list.add("a");
-        user_list.add("b");
-        user_list.add("c");
-        for (Iterator iterators = user_list.iterator(); iterators.hasNext();){
-            String list =  (String )iterators.next();
-            if (list.equals("b"))
-                iterators.remove();
-        }
-        for (Iterator iterators = user_list.iterator();iterators.hasNext();){
-            String list =  (String )iterators.next();
-            System.out.println(list);
-        }
+
+    private ListTest() {
+       String s="0# ";
+       int i = s.indexOf("#");
+        System.out.println(i);
+       String s1 = s.substring(0,i);
+       String s2 = s.substring(i+1,s.length()).trim();
+       System.out.println("s1"+s1);
+        System.out.println("s2"+s2);
+        System.out.println(s2.equals(""));
     }
     public static void main(String[] args){
         new ListTest();

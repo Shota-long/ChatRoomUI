@@ -9,5 +9,6 @@ public class ChatUtil {
 	public static final String PRIVATE_CHAT = "2";    //私聊
 	public static final String PUBLLIC_CHAT = "3";	//群聊
 	public static final String CLOSE_ROOM = "4";     //退出聊天室
-	public static final String LOGIN_CHECK = "5";
+	public static final String SIGN_IN = "5";        //注册
+	public static final String LOGIN_CHECK = "6";    //登陆验证
 }

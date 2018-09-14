@@ -4,30 +4,26 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-
-import chatFrame.chatFrame;
+import Server.ChatUtil;
 
 public class registerFrame extends JFrame{
 	
 	private JPanel panel1,panel2,panel3,panel4,panel5,panel6;
-	private JLabel userTab,passTab,show,show1;//��ǩ
+	private JLabel userTab;
+	private JLabel passTab;
+	public JLabel show;
+	private JLabel show1;
 	private JTextField userText;
 	private JPasswordField passField;
 	private JButton regButton;
 	public String userName;
 	public String userPwd;
-	
-	private JFrame jf ;
-	
-	
-	
 	//窗体初始化
 	public void init(){
 		this.setTitle("注册页面");
@@ -54,10 +50,7 @@ public class registerFrame extends JFrame{
 		panel5.setLayout(new FlowLayout(FlowLayout.CENTER));
 		panel6 = new JPanel();
 		panel6.setLayout(new FlowLayout(FlowLayout.CENTER));
-		
-		jf = new JFrame();
-		jf = this;
-		
+
 		userTab = new JLabel("账号");
 		userText = new JTextField(11);
 	
@@ -79,20 +72,12 @@ public class registerFrame extends JFrame{
 					
 					userName = userText.getText();
 					userPwd = String.valueOf(passField.getPassword());
-					
-					boolean lc = new loginCheck(userName,userPwd).loginCheck();
-					if(lc) {
-						new loginFrame();
-						jf.setVisible(false);
-					}
-					else show.setText("注册失败");
-					
 					System.out.println("用户名:"+userName);
 					System.out.println("密码:"+userPwd);
+					loginFrame.Msg.send(ChatUtil.SIGN_IN +"#["+userName+"]["+userPwd+"]");
+					loginFrame.Msg.ReciveregisterFrame(registerFrame.this);
 			}
-		}
-				);
-
+		});
 		//把组建添加到panel1
 		panel1.add(userTab);
 		panel1.add(userText);

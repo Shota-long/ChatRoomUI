@@ -90,7 +90,7 @@ public class personalFrame extends JFrame implements ActionListener{
 		// TODO Auto-generated method stub
 			String message = area2.getText();
 			loginFrame.Msg.send(ChatUtil.PRIVATE_CHAT+"#["+name1+"]To["+name3+"]:"+message);
-			loginFrame.Msg.read();
+			area1.append("["+name1+"]:"+message);
 			area2.setText("");
 	}
 	public String parse(String name){

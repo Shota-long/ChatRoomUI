@@ -160,7 +160,7 @@ public class chatFrame extends JFrame implements ActionListener{
 					String message = area3.getText();
 					loginFrame.Msg.send(ChatUtil.PUBLLIC_CHAT+"#["+name+"]:"+message);
 					loginFrame.Msg.setTextArea(area1);
-					loginFrame.Msg.Recive(this);
+					loginFrame.Msg.RecivechatFrame(this);
 					area3.setText("");
 			}
 			
@@ -171,9 +171,8 @@ public class chatFrame extends JFrame implements ActionListener{
 		public void getSocket(){
 			try {
 				loginFrame.Msg.send(ChatUtil.OPEN_ROOM+"#"+name);
-				loginFrame.Msg.Recive(this);
+				loginFrame.Msg.RecivechatFrame(this);
 				loginFrame.Msg.setTextArea(area1);
-				loginFrame.Msg.read();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
