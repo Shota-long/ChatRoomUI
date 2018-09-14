@@ -19,7 +19,8 @@ import chatFrame.chatFrame;
 public class createTextPanel1 extends JFrame {
 	
 	private JPanel panel1,panel2,panel3,panel4,panel5;
-	private JLabel userTab,passTab,show;
+	private JLabel userTab,passTab;
+	public static JLabel show;
 	private JTextField userText;
 	private JPasswordField passField;
 	private JButton loginButton,regButton;

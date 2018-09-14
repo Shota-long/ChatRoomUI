@@ -109,7 +109,7 @@ public class AppenToTextArea extends MsgSender<JTextArea> {
                 textPanel1.dispose();
             }
             if (mes1.trim().equals("false"))
-                register.show.setText("账号密码错误");
+                createTextPanel1.show.setText("账号密码错误");
         }
 
     }

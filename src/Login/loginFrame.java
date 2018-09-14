@@ -26,7 +26,7 @@ public class loginFrame extends JFrame{
 	//定义选项卡
 	private JTabbedPane jTabbedPane = new JTabbedPane();//存放选项卡组件
 	private String[] tabNames = {"登录","自定义"};
-	public static AppenToTextArea Msg = new AppenToTextArea(ChatUtil.ADDRESS, ChatUtil.PORT);
+	public static AppenToTextArea Msg;
 	public loginFrame(){
 		init();
 		layoutComponents();
