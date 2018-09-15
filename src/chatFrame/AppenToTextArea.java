@@ -16,8 +16,8 @@ public class AppenToTextArea extends MsgSender<JTextArea> {
     private personalFrame personal;
     private loginFrame textPanel1;
     private String login_name;
-
-    public AppenToTextArea(String NetAddress, int port) { super(NetAddress, port); }
+    private Queue<String> queue = new LinkedList<String>();
+    public static int flag = 0;
     @Override
     public void send(String s) {
         super.send(s);
@@ -30,20 +30,16 @@ public class AppenToTextArea extends MsgSender<JTextArea> {
         this.textPanel1 = textPanel1;
         this.login_name = login_name;
     }
-    public void TranSportPersonal(personalFrame personal){
-        this.personal = personal;
-    }
     @Override
     public void handleText(String s) {
+        System.out.println("s");
         int n = s.indexOf("#");
-        System.out.println(n);
         String mes0 = s.substring(0,n);
+        System.out.println(mes0);
         String mes1 = s.substring(n+1,s.length()).trim();
-        System.out.println("mes0"+mes0);
-        System.out.println("mes1"+mes1);
+        System.out.println(mes1);
         //在线列表处理
         if (mes0.equals(ChatUtil.FRIEND_LIST)) {
-            System.out.println(mes1.equals(""));
             if (!(mes1.equals(""))){
                 String[] list = mes1.split(",");
                 for (String friendlist : list) {
@@ -53,20 +49,23 @@ public class AppenToTextArea extends MsgSender<JTextArea> {
             }
         }
         else if (mes0.equals(ChatUtil.PRIVATE_CHAT)){
-            System.out.println("私聊");
-            Queue<String> queue = new LinkedList<String>();
-            queue.offer(mes1);
-            for (String q : queue)
-            {
-                System.out.println("msg:"+q);
-                String sender_name = q.substring(1,mes1.indexOf("]"));
-                System.out.println("sender_name:"+sender_name);
-                int i = chat.model.indexOf(sender_name.trim());
-                chat.model.setElementAt("<html><font color='red'>"+sender_name+"</font></html>",i);
-                if(personal.name3.equals(sender_name.trim())){
-                    personal.area1.append(q);
+            personal = personalFrame.getInstance();
+            System.out.println("加到队列中");
+            MessgeMap messgeMap = MessgeMap.getInstance();;
+                System.out.println("输出队列"+mes1);
+                String sender_name = mes1.substring(1,mes1.indexOf("]"));
+                System.out.println("sender_name"+sender_name);
+                int i=0;
+                if (flag == 0){
+                    i = chat.model.indexOf(sender_name.trim());
+                    System.out.println(i);
                 }
-            }
+                 else if (flag == 1 ){
+                     i = chat.model.indexOf("<html><font color='red'>"+sender_name+"</font></html>");
+                }
+                chat.model.setElementAt("<html><font color='red'>"+sender_name+"</font></html>",i);
+                flag = 1;
+                messgeMap.addMessage(sender_name,mes1);
         }
 
         else if (mes0.equals(ChatUtil.OPEN_ROOM)){
@@ -91,7 +90,6 @@ public class AppenToTextArea extends MsgSender<JTextArea> {
         }
         //注册
         else if(mes0.equals(ChatUtil.SIGN_IN)){
-            System.out.println("验证!");
             if (mes1.trim().equals("true")) {
                 new loginFrame();
                 register.dispose();

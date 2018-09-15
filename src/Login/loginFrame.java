@@ -67,7 +67,8 @@ public class loginFrame extends JFrame{
 	
 	public static void main(String[] args) {
 		new loginFrame();
-		Msg= new AppenToTextArea(ChatUtil.ADDRESS, ChatUtil.PORT);
+		Msg= new AppenToTextArea();
+		Msg.connect(ChatUtil.ADDRESS,ChatUtil.PORT);
 		Msg.read();
 	}
 

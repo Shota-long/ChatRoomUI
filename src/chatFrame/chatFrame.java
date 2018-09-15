@@ -10,6 +10,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;//
@@ -98,7 +100,6 @@ public class chatFrame extends JFrame implements ActionListener{
 		p6 = new JPanel();
 		p6.setLayout(new BorderLayout());
 		model = new DefaultListModel();
-		//model.addElement("龙胜");
 		//model.addElement("<html><font color='red'>李四</font></html>");
 		list = new JList(model);
 		//好友列表点击事件
@@ -111,8 +112,13 @@ public class chatFrame extends JFrame implements ActionListener{
 					System.out.println(chatFrame.this.name);
 					System.out.println(selectedName.equals(chatFrame.this.name));
 					if( !(selectedName.equals(chatFrame.this.name)) ) {
-						 personalFrame personal =  new personalFrame(chatFrame.this.name,selectedName);
-						loginFrame.Msg.TranSportPersonal(personal);
+						 personalFrame personal = personalFrame.getInstance();
+						 personal.area1.setText("");
+						 personal.setName(chatFrame.this.name,selectedName);
+						 int i = model.indexOf(selectedName.trim());
+						 System.out.println(parse(selectedName.trim()));
+						 model.setElementAt(parse(selectedName.trim()),i);
+						AppenToTextArea.flag = 0;
 					}
 				} 
 				}
@@ -176,6 +182,19 @@ public class chatFrame extends JFrame implements ActionListener{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+		//正则表达式，提取sender_name
+		public String parse(String name)
+		{
+			String expr = "'>(.+?)</";
+			Pattern r = Pattern.compile(expr);
+			Matcher m = r.matcher(name);
+			if (m.find())
+			{
+				System.out.println(m.group(1));
+				return m.group(1);
+			}
+			else return name;
 		}
 //	public static void main(String[] args){
 //		chatFrame chat= new chatFrame("龙胜");

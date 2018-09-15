@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.DefaultListModel;
@@ -24,28 +25,21 @@ import Server.ChatUtil;
 
 public class personalFrame extends JFrame implements ActionListener{
 
-		public String name1,name2,name3;
-		public JPanel p1,p2,p3,p4,p5;
-		public JTextArea area1;
-		public static JTextArea area2;
-		public JScrollPane js1,js2,js3,js4;
-		public JLabel lab;
-		public JButton sendBut;
-		public DefaultListModel model;
-	public void init() {
-		this.setTitle("To "+name3);
-		this.setSize(520,570);
-		this.setResizable(false);
-		this.setLocationRelativeTo(null);
-		this.pack();
-		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-	}
-	public personalFrame(String name1, String name2){
-		this.name1 = name1;
-		this.name2 = name2;
-		System.out.println("name2:"+name2);
-		 this.name3 = parse(name2);
-		System.out.println("name:"+name3);
+	private JPanel p1,p2,p3,p4,p5;
+	public  JTextArea area1;
+	private JScrollPane js1,js2,js3,js4;
+	private JLabel lab;
+	private JButton sendBut;
+	private DefaultListModel model;
+	private static JTextArea area2;
+
+	public String user_send;
+	private String user_recv;
+	private static personalFrame instance;
+
+	private personalFrame()
+	{
+		//set p1
 		p1 = new JPanel();
 		p1.setLayout(new GridLayout(1, 1));
 		area1 = new JTextArea(21,10);
@@ -53,47 +47,93 @@ public class personalFrame extends JFrame implements ActionListener{
 		js1 = new JScrollPane(area1);
 		js1.setBorder(new TitledBorder("个人聊天"));
 		js1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+
 		p1.add(js1);
 
+
+		//set p2
 		p2 = new JPanel();
 		p2.setLayout(new FlowLayout(FlowLayout.LEFT));
-		
 
+
+		//set p3
 		p3 = new JPanel();
 		p3.setLayout(new FlowLayout(FlowLayout.LEFT));
 		area2 = new JTextArea(2,35);
 		area2.setLineWrap(true);
 		js4 = new JScrollPane(area2);
 		js4.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED );
-	
 		sendBut = new JButton("发送>>");
 		sendBut.addActionListener(this);
-
 		p3.add(js4);
 		p3.add(sendBut);
 
+
+		//set p4
 		p4 = new JPanel();
 		p4.setLayout(new GridLayout(2, 1));
 		p4.add(p2);
 		p4.add(p3);
 
+
+		//set p5
 		p5 = new JPanel();
 		p5.setLayout(new BorderLayout());
 		p5.add(p1,BorderLayout.NORTH);
 		p5.add(p4,BorderLayout.SOUTH);
 		this.getContentPane().add(p5);
-		init();
-		this.setVisible(true);
 	}
+
+
+	private void setWindow()
+	{
+		this.setTitle("TO " + this.user_recv);
+		this.setSize(520,570);
+		this.setResizable(false);
+		this.setLocationRelativeTo(null);
+		this.pack();
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+	}
+
+	public void setName(String user_send, String html_source)
+	{
+		this.user_send = user_send;
+		this.user_recv = parse(html_source);
+		setWindow();
+		showWindow();
+		instance.area1.setText("");
+		int size = instance.area1.getText().length();
+		instance.area1.replaceRange("",0,size);
+		addMessage();
+	}
+
+	private void showWindow()
+	{
+		this.setVisible(true);
+		this.setExtendedState(NORMAL);
+		this.requestFocus();
+	}
+
+
+	public static personalFrame getInstance()
+	{
+		if (instance == null)
+			instance = new personalFrame();
+		return instance;
+	}
+
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
 		// TODO Auto-generated method stub
 			String message = area2.getText();
-			loginFrame.Msg.send(ChatUtil.PRIVATE_CHAT+"#["+name1+"]To["+name3+"]:"+message);
-			area1.append("["+name1+"]:"+message);
+			loginFrame.Msg.send(ChatUtil.PRIVATE_CHAT+"#["+user_send+"]To["+user_recv+"]:"+message);
+			area1.append("["+user_send+"]:"+message+"\n");
 			area2.setText("");
 	}
-	public String parse(String name){
+
+	public String parse(String name)
+	{
 		String expr = "'>(.+?)</";
 		Pattern r = Pattern.compile(expr);
 		Matcher m = r.matcher(name);
@@ -103,5 +143,20 @@ public class personalFrame extends JFrame implements ActionListener{
 			return m.group(1);
 		}
 		else return name;
+	}
+	private void addMessage(){
+		MessgeMap messgeMap;
+		messgeMap = MessgeMap.getInstance();
+		Queue<String> messageQueue= messgeMap.getMessageQueue(this.user_recv);
+		if (messageQueue == null)
+			return;
+		for (String q:messageQueue) {
+			System.out.println("queue:"+q);
+		}
+		System.out.println("\n");
+		for (String q:messageQueue) {
+			area1.append(q+"\n");
+			//messageQueue.
+		}
 	}
 }

@@ -2,18 +2,19 @@ package chatFrame;
 import java.util.*;
 
 public class ListTest {
+    public static void main(String... arg)
+    {
+        Map map = new HashMap();
+        map.put("hello", new Test());
 
-    private ListTest() {
-       String s="0# ";
-       int i = s.indexOf("#");
-        System.out.println(i);
-       String s1 = s.substring(0,i);
-       String s2 = s.substring(i+1,s.length()).trim();
-       System.out.println("s1"+s1);
-        System.out.println("s2"+s2);
-        System.out.println(s2.equals(""));
+        Test t = (Test) map.get("hello");
+        t.i = 3;
+        Test t2 = (Test) map.get("hello");
+        System.out.println(t2.i);
     }
-    public static void main(String[] args){
-        new ListTest();
-    }
+}
+
+class Test
+{
+    public int i = 0;
 }
