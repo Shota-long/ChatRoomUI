@@ -1,21 +1,22 @@
 package Login;
 
+import Server.ChatUtil;
+
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import javax.swing.*;
 
-public class createTextPanel2 {
+public class createTextPanel2 extends JFrame implements ActionListener {
 	
 	private JPanel panel5,panel6,panel7,panel8;
 	private JLabel addrTab,portTab;
 	private JTextField addrText,portText;
-	private JButton submit,cancel;
+	private JButton submit;
+	private String address,port;
 	
 	public JPanel createTextPanel2() {
 		
@@ -31,26 +32,32 @@ public class createTextPanel2 {
 		
 		addrTab = new JLabel("地址ַ:");
 		addrText = new JTextField(11);
+		addrText.setText("192.168.0.105");
 		portTab = new JLabel("端口:");
 		portText = new JTextField(11);
-		submit = new JButton("连接");
-		cancel = new JButton("断开");
-
+		portText.setText("10086");
+		//address = addrText.getText();
+		//port = portText.getText();
+		submit = new JButton("确定");
+		submit.addActionListener(this);
 		//把组件添加到panel1
 		panel5.add(addrTab);
 		panel5.add(addrText);
 		panel6.add(portTab);
 		panel6.add(portText);
-		
 		panel7.add(submit);
-		panel7.add(cancel);
-		
 		panel8.add(panel5);
 		panel8.add(panel6);
 		panel8.add(panel7);
 		return panel8;
 		
 	}
-
-	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		address = addrText.getText().trim();
+		port = portText.getText().trim();
+		loginFrame.Msg.connect(address,Integer.valueOf(port));
+		loginFrame.Msg.read();
+		loginFrame.jTabbedPane.setSelectedIndex(0);
+	}
 }

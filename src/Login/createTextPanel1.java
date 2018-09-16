@@ -77,8 +77,8 @@ public class createTextPanel1 extends JFrame {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					new registerFrame();
-					obj.dispose();
+					new registerFrame(obj);
+					obj.setVisible(false);
 				}
 			}
 					);

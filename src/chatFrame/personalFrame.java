@@ -1,10 +1,10 @@
 package chatFrame;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,7 +28,8 @@ public class personalFrame extends JFrame implements ActionListener{
 	private JPanel p1,p2,p3,p4,p5;
 	public  JTextArea area1;
 	private JScrollPane js1,js2,js3,js4;
-	private JLabel lab;
+	private JLabel[] smile ;
+	private String[] smile_lab;
 	private JButton sendBut;
 	private DefaultListModel model;
 	private static JTextArea area2;
@@ -42,7 +43,8 @@ public class personalFrame extends JFrame implements ActionListener{
 		//set p1
 		p1 = new JPanel();
 		p1.setLayout(new GridLayout(1, 1));
-		area1 = new JTextArea(21,10);
+		area1 = new JTextArea(13,10);
+		area1.setFont(new Font("dialog",0,20));
 		area1.setLineWrap(true);
 		js1 = new JScrollPane(area1);
 		js1.setBorder(new TitledBorder("个人聊天"));
@@ -54,6 +56,20 @@ public class personalFrame extends JFrame implements ActionListener{
 		//set p2
 		p2 = new JPanel();
 		p2.setLayout(new FlowLayout(FlowLayout.LEFT));
+		smile_lab = new String[]{"😂","😘","😍","😊","😁",
+				"😭","😜","😝","☺","😄",
+				"😡","😀","😥","🙃","😋",
+				"👍","👌","❤","😱","🐷"};
+		smile = new JLabel[smile_lab.length];
+		for (int i = 0 ; i<smile_lab.length ; i++) {
+			smile[i] = new JLabel(smile_lab[i]);
+			smile[i].setFont(new Font("dialog",0,20));
+			smile[i].addMouseListener(new MyMouseListener());
+		}
+		for (int i = 0; i< smile_lab.length; i++)
+		{
+			p2.add(smile[i]);
+		}
 
 
 		//set p3
@@ -157,6 +173,15 @@ public class personalFrame extends JFrame implements ActionListener{
 		for (String q:messageQueue) {
 			area1.append(q+"\n");
 			//messageQueue.
+		}
+	}
+	class MyMouseListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent e) {
+			if (e.getClickCount()==1){
+				JLabel Recive_simle = (JLabel) e.getComponent();
+				System.out.println(Recive_simle.getText());
+				area2.append(Recive_simle.getText());
+			}
 		}
 	}
 }

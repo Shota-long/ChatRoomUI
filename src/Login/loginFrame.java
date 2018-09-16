@@ -24,8 +24,8 @@ import chatFrame.AppenToTextArea;
 
 public class loginFrame extends JFrame{
 	//定义选项卡
-	private JTabbedPane jTabbedPane = new JTabbedPane();//存放选项卡组件
-	private String[] tabNames = {"登录","自定义"};
+	public static JTabbedPane jTabbedPane;//存放选项卡组件
+	private String[] tabNames = {"登录"};
 	public static AppenToTextArea Msg;
 	public loginFrame(){
 		init();
@@ -42,22 +42,23 @@ public class loginFrame extends JFrame{
 	}
 	
 	public void layoutComponents() {
+		jTabbedPane = new JTabbedPane();
 		createTextPanel1 Panel1 = new createTextPanel1(this);
-		createTextPanel2 Panel2 = new createTextPanel2();
+		//createTextPanel2 Panel2 = new createTextPanel2();
 		
 		int i = 0;
 		//添加选项标签
 		jTabbedPane.addTab(tabNames[i++],Panel1.createTextPanel1());
-		jTabbedPane.addTab(tabNames[i++],Panel2.createTextPanel2());
+		//jTabbedPane.addTab(tabNames[i++],Panel2.createTextPanel2());
 
 		// 添加选项卡选中状态改变的监听器
         jTabbedPane.addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				System.out.println("当前选中的选项卡: " + jTabbedPane.getSelectedIndex());
+				int i = jTabbedPane.getSelectedIndex();
+				System.out.println("当前选中的选项卡: " + i);
 			}
-        	
         });
         
 		this.setContentPane(jTabbedPane);
