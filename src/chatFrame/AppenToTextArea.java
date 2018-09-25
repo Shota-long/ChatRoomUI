@@ -18,6 +18,7 @@ public class AppenToTextArea extends MsgSender<JTextArea> {
     private String login_name;
     private Queue<String> queue = new LinkedList<String>();
     public static int flag = 0;
+    private Map fileNameMap = new HashMap();
     @Override
     public void send(String s) {
         super.send(s);
@@ -32,12 +33,9 @@ public class AppenToTextArea extends MsgSender<JTextArea> {
     }
     @Override
     public void handleText(String s) {
-        System.out.println("s");
         int n = s.indexOf("#");
         String mes0 = s.substring(0,n);
-        System.out.println(mes0);
         String mes1 = s.substring(n+1,s.length()).trim();
-        System.out.println(mes1);
         //在线列表处理
         if (mes0.equals(ChatUtil.FRIEND_LIST)) {
             if (!(mes1.equals(""))){
@@ -48,6 +46,7 @@ public class AppenToTextArea extends MsgSender<JTextArea> {
                 }
             }
         }
+        //私聊
         else if (mes0.equals(ChatUtil.PRIVATE_CHAT)){
             personal = personalFrame.getInstance();
             System.out.println("加到队列中");
@@ -67,7 +66,7 @@ public class AppenToTextArea extends MsgSender<JTextArea> {
                 flag = 1;
                 messgeMap.addMessage(sender_name,mes1);
         }
-
+        //进入聊天室
         else if (mes0.equals(ChatUtil.OPEN_ROOM)){
             chat.model.addElement(mes1);
             user_list.add(mes1);
@@ -109,6 +108,26 @@ public class AppenToTextArea extends MsgSender<JTextArea> {
             if (mes1.trim().equals("false"))
                 createTextPanel1.show.setText("账号密码错误");
         }
-
+        else if (mes0.equals(ChatUtil.FILENAME)){
+            String[] mes2 = mes1.split("#");
+            Init(mes2[0], mes2[1], mes2[2]);
+            fileNameMap.put(mes2[1],mes2[0]);
+            System.out.println("收到文件名:"+mes2[0]);
+            System.out.println("收到uuid:"+mes2[1]);
+            System.out.println("收到文件总长度:"+mes2[2]);
+        }
+        else if (mes0.equals(ChatUtil.FILECONTENT)){
+            String getuuid = ChargeFile(getMsg_byte());
+            System.out.println("获取文件uuid:"+getuuid);
+            if(!getuuid.equals("")){
+                int[] fileNumber=getReciveState(getuuid);
+                if (fileNumber[0] == fileNumber[1]){
+                    String title = "消息";
+                    String fileName = (String) fileNameMap.get(getuuid);
+                    fileNameMap.remove(getuuid);
+                    JOptionPane.showMessageDialog(chat,fileName+"文件已接收成功,放置D:\\FileRecive",title,JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        }
     }
 }

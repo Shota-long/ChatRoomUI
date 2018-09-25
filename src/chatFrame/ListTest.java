@@ -1,20 +1,17 @@
 package chatFrame;
-import java.util.*;
+
+import javax.swing.*;
+import javax.swing.event.*;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ListTest {
-    public static void main(String... arg)
+    public static void main(String args[])
     {
-        Map map = new HashMap();
-        map.put("hello", new Test());
-
-        Test t = (Test) map.get("hello");
-        t.i = 3;
-        Test t2 = (Test) map.get("hello");
-        System.out.println(t2.i);
+        int a =160;
+        int b = 5000;
+        int percent = 100*a/b;
+        System.out.println(percent);
     }
-}
-
-class Test
-{
-    public int i = 0;
 }

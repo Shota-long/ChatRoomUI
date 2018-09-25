@@ -5,19 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import Login.loginFrame;
@@ -25,41 +17,36 @@ import Server.ChatUtil;
 
 public class personalFrame extends JFrame implements ActionListener{
 
-	private JPanel p1,p2,p3,p4,p5;
+	private JPanel p1,p2,p3,p4,p5,p6,p7;
 	public  JTextArea area1;
+	private static JTextArea area2;
 	private JScrollPane js1,js2,js3,js4;
 	private JLabel[] smile ;
 	private String[] smile_lab;
-	private JButton sendBut;
-	private DefaultListModel model;
-	private static JTextArea area2;
-
+	private JButton sendBut,sendFile,Empty;
 	public String user_send;
 	private String user_recv;
 	private static personalFrame instance;
+	private sendFileProgressBar sendfileprogressBar;
 
 	private personalFrame()
 	{
 		//set p1
 		p1 = new JPanel();
 		p1.setLayout(new GridLayout(1, 1));
-		area1 = new JTextArea(13,10);
-		area1.setFont(new Font("dialog",0,20));
+		area1 = new JTextArea(20,40);
+		area1.setFont(new Font("dialog",0,15));
 		area1.setLineWrap(true);
 		js1 = new JScrollPane(area1);
 		js1.setBorder(new TitledBorder("个人聊天"));
 		js1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-
 		p1.add(js1);
-
-
 		//set p2
 		p2 = new JPanel();
 		p2.setLayout(new FlowLayout(FlowLayout.LEFT));
 		smile_lab = new String[]{"😂","😘","😍","😊","😁",
 				"😭","😜","😝","☺","😄",
-				"😡","😀","😥","🙃","😋",
-				"👍","👌","❤","😱","🐷"};
+				"😡","😀","😥","🙃","😋"};
 		smile = new JLabel[smile_lab.length];
 		for (int i = 0 ; i<smile_lab.length ; i++) {
 			smile[i] = new JLabel(smile_lab[i]);
@@ -70,41 +57,51 @@ public class personalFrame extends JFrame implements ActionListener{
 		{
 			p2.add(smile[i]);
 		}
-
-
+		ImageIcon icon = new ImageIcon("D:\\WorkTest\\chatRoom1\\src\\Image\\file.jpg");
+		sendFile = new JButton(icon);
+		sendFile.setPreferredSize(new Dimension(20,18));
+		sendFile.addActionListener(this);
+		p2.add(sendFile);
 		//set p3
 		p3 = new JPanel();
 		p3.setLayout(new FlowLayout(FlowLayout.LEFT));
-		area2 = new JTextArea(2,35);
+		area2 = new JTextArea(5,40);
+		area2.setFont(new Font("dialog",0,15));
 		area2.setLineWrap(true);
 		js4 = new JScrollPane(area2);
 		js4.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED );
-		sendBut = new JButton("发送>>");
-		sendBut.addActionListener(this);
 		p3.add(js4);
-		p3.add(sendBut);
-
-
-		//set p4
+		//p4
 		p4 = new JPanel();
-		p4.setLayout(new GridLayout(2, 1));
-		p4.add(p2);
-		p4.add(p3);
+		p4.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		sendBut = new JButton("发送>>");
+		Empty = new JButton("清空");
+		sendBut.addActionListener(this);
+		Empty.addActionListener(this);
+		p4.add(sendBut);
+		p4.add(Empty);
 
-
-		//set p5
 		p5 = new JPanel();
 		p5.setLayout(new BorderLayout());
 		p5.add(p1,BorderLayout.NORTH);
-		p5.add(p4,BorderLayout.SOUTH);
-		this.getContentPane().add(p5);
+		p5.add(p2,BorderLayout.SOUTH);
+		//
+		p6 = new JPanel();
+		p6.setLayout(new BorderLayout());
+		p6.add(p3,BorderLayout.NORTH);
+		p6.add(p4,BorderLayout.SOUTH);
+		//
+		p7 = new JPanel();
+		p7.setLayout(new BorderLayout());
+		p7.add(p5,BorderLayout.NORTH);
+		p7.add(p6,BorderLayout.SOUTH);
+
+		this.getContentPane().add(p7);
 	}
-
-
 	private void setWindow()
 	{
 		this.setTitle("TO " + this.user_recv);
-		this.setSize(520,570);
+		this.setSize(620,800);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.pack();
@@ -141,11 +138,44 @@ public class personalFrame extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		// TODO Auto-generated method stub
-			String message = area2.getText();
-			loginFrame.Msg.send(ChatUtil.PRIVATE_CHAT+"#["+user_send+"]To["+user_recv+"]:"+message);
-			area1.append("["+user_send+"]:"+message+"\n");
-			area2.setText("");
+		try {
+			// TODO Auto-generated method stub
+			if (e.getActionCommand().equals("发送>>")) {
+				String message = area2.getText();
+				loginFrame.Msg.send(ChatUtil.PRIVATE_CHAT + "#[" + user_send + "]To[" + user_recv + "]:" + message);
+				area1.append("[" + user_send + "]:" + message + "\n");
+				area2.setText("");
+			}
+			if (e.getActionCommand().equals("清空")) {
+				area2.setText("");
+			}
+			if (e.getSource()==sendFile) {
+				sendFile();
+			}
+		}catch(Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+	//发送文件
+	private void sendFile() {
+		System.out.println("发送文件");
+		JFileChooser chooser = new javax.swing.JFileChooser();
+		if (chooser.showOpenDialog(this) == javax.swing.JFileChooser.APPROVE_OPTION) {
+			File path = chooser.getCurrentDirectory();
+			File file = chooser.getSelectedFile();
+			System.out.println(file.getName());
+			System.out.println(path);
+			sendfileprogressBar= new sendFileProgressBar(this);
+			sendfileprogressBar.init();
+			sendfileprogressBar.initUI();
+			loginFrame.Msg.send(file);
+			showProcessBar();
+		}
+	}
+
+	private void showProcessBar() {
+		Thread t = new Thread(sendfileprogressBar);
+		t.start();
 	}
 
 	public String parse(String name)
