@@ -58,6 +58,8 @@ public class loginFrame extends JFrame{
 			public void stateChanged(ChangeEvent e) {
 				int i = jTabbedPane.getSelectedIndex();
 				System.out.println("当前选中的选项卡: " + i);
+				if (i==1)
+					Msg.destroy();
 			}
         });
         

@@ -2,6 +2,8 @@ package chatFrame;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,7 +20,7 @@ public class chatFrame extends JFrame implements ActionListener{
 	//滚动容器
 	private JScrollPane js1,js2,js3;
 	//按钮
-	private JButton sendBut,Empty,sendFile;
+	private JButton sendBut,Empty,sendFile,historyMsgBut;
 	//模型
 	public DefaultListModel model;
 	//好友列表
@@ -29,6 +31,7 @@ public class chatFrame extends JFrame implements ActionListener{
 	private JLabel[] smile ;
 	private String[] smile_lab;
 	private sendFileProgressBar sendfileprogressBar;
+	private SimpleDateFormat df;
 
 	public void init() {
 		//定义窗体的特征
@@ -80,6 +83,10 @@ public class chatFrame extends JFrame implements ActionListener{
 		sendFile.setPreferredSize(new Dimension(20,18));
 		sendFile.addActionListener(this);
 		p2.add(sendFile);
+		historyMsgBut = new JButton("历史纪录");
+		historyMsgBut.addActionListener(this);
+		p2.add(historyMsgBut);
+
 		//实例化p3输入框
 		p3 = new JPanel();
 		p3.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -93,7 +100,7 @@ public class chatFrame extends JFrame implements ActionListener{
 		//实例化p4
 		p4 = new JPanel();
 		p4.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		sendBut = new JButton("发送>>");
+		sendBut = new JButton("发送");
 		Empty = new JButton("清空");
 		//绑定事件
 		sendBut.addActionListener(this);
@@ -124,7 +131,7 @@ public class chatFrame extends JFrame implements ActionListener{
 						 int i = model.indexOf(selectedName.trim());
 						 System.out.println(parse(selectedName.trim()));
 						 model.setElementAt(parse(selectedName.trim()),i);
-						AppenToTextArea.flag = 0;
+						 AppenToTextArea.flag = 0;
 					}
 				} 
 				}
@@ -173,14 +180,16 @@ public class chatFrame extends JFrame implements ActionListener{
 				}
 			}
 		});
+		df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
 	////buttom监听器
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		try {
-				if(e.getActionCommand().equals("发送>>")) {
+				if(e.getActionCommand().equals("发送")) {
 					String message = area3.getText();
-					loginFrame.Msg.send(ChatUtil.PUBLLIC_CHAT+"#["+name+"]:"+message);
+					String time = df.format(new Date());
+					loginFrame.Msg.send(ChatUtil.PUBLLIC_CHAT+"#["+name+"]:"+time+"\n"+message);
 					loginFrame.Msg.setTextArea(area1);
 					loginFrame.Msg.RecivechatFrame(this);
 					area3.setText("");
@@ -189,6 +198,12 @@ public class chatFrame extends JFrame implements ActionListener{
 					area3.setText("");
 				if (e.getSource()==sendFile) {
 					sendFile();
+				}
+				if (e.getSource()==historyMsgBut){
+					historyMsgFrame historyMsg = historyMsgFrame.getInstance();
+					historyMsg.area1.setText("");
+					historyMsg.showWindows();
+					loginFrame.Msg.send(ChatUtil.PUBLIC_HISTORY+"#");
 				}
 			}catch(Exception e1) {
 				e1.printStackTrace();

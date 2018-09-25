@@ -13,4 +13,6 @@ public class ChatUtil {
 	public static final String LOGIN_CHECK = "6";       //登陆验证
 	public static final String FILENAME = "7";            //文件名
 	public static final String FILECONTENT = "8";         //文件内容
+	public static final String PUBLIC_HISTORY = "A";      		//历史纪录
+	public static final String PRIVATE_HISTORY = "B";      		//历史纪录
 }

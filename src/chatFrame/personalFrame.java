@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,11 +25,12 @@ public class personalFrame extends JFrame implements ActionListener{
 	private JScrollPane js1,js2,js3,js4;
 	private JLabel[] smile ;
 	private String[] smile_lab;
-	private JButton sendBut,sendFile,Empty;
+	private JButton sendBut,sendFile,Empty,historyMsgBut;
 	public String user_send;
 	private String user_recv;
 	private static personalFrame instance;
 	private sendFileProgressBar sendfileprogressBar;
+	private SimpleDateFormat df;
 
 	private personalFrame()
 	{
@@ -37,6 +40,7 @@ public class personalFrame extends JFrame implements ActionListener{
 		area1 = new JTextArea(20,40);
 		area1.setFont(new Font("dialog",0,15));
 		area1.setLineWrap(true);
+		area1.setEditable(false);
 		js1 = new JScrollPane(area1);
 		js1.setBorder(new TitledBorder("个人聊天"));
 		js1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -62,6 +66,9 @@ public class personalFrame extends JFrame implements ActionListener{
 		sendFile.setPreferredSize(new Dimension(20,18));
 		sendFile.addActionListener(this);
 		p2.add(sendFile);
+		historyMsgBut = new JButton("历史纪录");
+		historyMsgBut.addActionListener(this);
+		p2.add(historyMsgBut);
 		//set p3
 		p3 = new JPanel();
 		p3.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -74,7 +81,7 @@ public class personalFrame extends JFrame implements ActionListener{
 		//p4
 		p4 = new JPanel();
 		p4.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		sendBut = new JButton("发送>>");
+		sendBut = new JButton("发送");
 		Empty = new JButton("清空");
 		sendBut.addActionListener(this);
 		Empty.addActionListener(this);
@@ -97,6 +104,7 @@ public class personalFrame extends JFrame implements ActionListener{
 		p7.add(p6,BorderLayout.SOUTH);
 
 		this.getContentPane().add(p7);
+		df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
 	private void setWindow()
 	{
@@ -140,10 +148,13 @@ public class personalFrame extends JFrame implements ActionListener{
 	{
 		try {
 			// TODO Auto-generated method stub
-			if (e.getActionCommand().equals("发送>>")) {
+			if (e.getActionCommand().equals("发送")) {
 				String message = area2.getText();
-				loginFrame.Msg.send(ChatUtil.PRIVATE_CHAT + "#[" + user_send + "]To[" + user_recv + "]:" + message);
-				area1.append("[" + user_send + "]:" + message + "\n");
+				String time = df.format(new Date());
+				loginFrame.Msg.send(ChatUtil.PRIVATE_CHAT + "#[" + user_send + "]To[" + user_recv + "]:"+time+"\n" + message);
+				area1.append("[" + user_send + "]::" +time+"\n"+ message + "\n");
+				MessgeMap messgeMap = MessgeMap.getInstance();
+				messgeMap.addMessage(user_recv,"[" + user_send + "]::"+time+"\n" + message);
 				area2.setText("");
 			}
 			if (e.getActionCommand().equals("清空")) {
@@ -151,6 +162,12 @@ public class personalFrame extends JFrame implements ActionListener{
 			}
 			if (e.getSource()==sendFile) {
 				sendFile();
+			}
+			if (e.getSource()==historyMsgBut){
+				historyMsgFrame historyMsg = historyMsgFrame.getInstance();
+				historyMsg.showWindows();
+				historyMsg.area1.setText("");
+				loginFrame.Msg.send(ChatUtil.PRIVATE_HISTORY+"#[" + user_send + "][" + user_recv + "]");
 			}
 		}catch(Exception e1) {
 			e1.printStackTrace();
@@ -205,6 +222,7 @@ public class personalFrame extends JFrame implements ActionListener{
 			//messageQueue.
 		}
 	}
+	//鼠标点击表情
 	class MyMouseListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent e) {
 			if (e.getClickCount()==1){

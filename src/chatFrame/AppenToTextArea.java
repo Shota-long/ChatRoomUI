@@ -33,6 +33,7 @@ public class AppenToTextArea extends MsgSender<JTextArea> {
     }
     @Override
     public void handleText(String s) {
+//        System.out.println("接收到的消息："+s);
         int n = s.indexOf("#");
         String mes0 = s.substring(0,n);
         String mes1 = s.substring(n+1,s.length()).trim();
@@ -50,7 +51,7 @@ public class AppenToTextArea extends MsgSender<JTextArea> {
         else if (mes0.equals(ChatUtil.PRIVATE_CHAT)){
             personal = personalFrame.getInstance();
             System.out.println("加到队列中");
-            MessgeMap messgeMap = MessgeMap.getInstance();;
+            MessgeMap messgeMap = MessgeMap.getInstance();
                 System.out.println("输出队列"+mes1);
                 String sender_name = mes1.substring(1,mes1.indexOf("]"));
                 System.out.println("sender_name"+sender_name);
@@ -128,6 +129,12 @@ public class AppenToTextArea extends MsgSender<JTextArea> {
                     JOptionPane.showMessageDialog(chat,fileName+"文件已接收成功,放置D:\\FileRecive",title,JOptionPane.INFORMATION_MESSAGE);
                 }
             }
+        }
+        else if(mes0.equals(ChatUtil.PUBLIC_HISTORY)){
+            historyMsgFrame.instance.area1.append(mes1+"\n");
+        }
+        else if(mes0.equals(ChatUtil.PRIVATE_HISTORY)){
+            historyMsgFrame.instance.area1.append(mes1+"\n");
         }
     }
 }
